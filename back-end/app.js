@@ -1,7 +1,10 @@
 const express = require("express");
 const fetch = require("node-fetch");
+const cors = require("cors");
 const app = express();
 const port = 3000;
+
+app.use(cors());
 
 const parseTitle = (body) => {
   // <title> regex courtesy of https://stackoverflow.com/a/13452897/12454586
