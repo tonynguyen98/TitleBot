@@ -30,7 +30,11 @@ app.get("/", (req, res) => {
     // return the title to the request
     .then((title) => res.send(title))
     // catch any errors
-    .catch((e) => res.status(500).end(e.message));
+    .catch((e) => {
+      e.errno === "ENOTFOUND"
+        ? res.status(400).end("Bad url query")
+        : res.status(500).end(e.message);
+    });
 });
 
 app.listen(port, () => {
