@@ -1,9 +1,21 @@
 <template>
-  <b-container>
-    <b-row class="vh-100 text-center" align-v="center" align-h="center">
-      <TitleBot />
-    </b-row>
-  </b-container>
+  <div>
+    <b-container>
+      <!-- Display TitleBot, Centered -->
+      <b-row class="vh-100 text-center" align-v="center" align-h="center">
+        <TitleBot />
+      </b-row>
+    </b-container>
+
+    <!-- Display Lower Navbar -->
+    <b-navbar variant="secondary" fixed="bottom">
+      <b-navbar-brand
+        href="https://github.com/tonynguyen98"
+        style="color: white"
+        >&copy; Tony Nguyen</b-navbar-brand
+      >
+    </b-navbar>
+  </div>
 </template>
 
 <script>

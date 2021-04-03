@@ -1,28 +1,38 @@
 <template>
   <b-container>
-    <b-card title="TitleBot" class="px-5 py-5 mb-5">
+    <b-col class="px-5 py-5 mb-5">
+      <!-- Banner Logo Image -->
+      <b-img :src="require('@/assets/Banner.png')" fluid center></b-img>
+
+      <!-- Search Bar -->
       <b-form @submit="onSubmit" v-if="show" class="py-3">
         <b-row class="py-3">
-          <b-form-input
-            id="input"
-            v-model="form.url"
-            placeholder="Enter website"
-            required
-          ></b-form-input>
-        </b-row>
+          <b-input-group prepend="http://" class="mt-3">
+            <b-form-input
+              type="search"
+              v-model="url"
+              placeholder="website.com"
+              required
+            ></b-form-input>
 
-        <b-row class="text-center" align-v="center" align-h="center">
-          <b-button v-if="isLoading === false" type="submit" variant="primary"
-            >Search
-          </b-button>
+            <b-input-group-append>
+              <b-button
+                v-if="isLoading === false"
+                type="submit"
+                variant="secondary"
+                >Search
+              </b-button>
 
-          <b-button v-if="isLoading === true" variant="primary" disabled>
-            <b-spinner small></b-spinner>
-          </b-button>
+              <b-button v-if="isLoading === true" variant="secondary" disabled>
+                <b-spinner small></b-spinner>
+              </b-button>
+            </b-input-group-append>
+          </b-input-group>
         </b-row>
       </b-form>
 
-      <b-row class="text-center" align-h="center">
+      <!-- Display Title with Good Response, Otherwise Display Error -->
+      <b-card v-if="title !== ''" class="text-center" align-h="center">
         <p v-if="errorResponse === 400" style="font-size: large; color: red">
           Bad URL Request
         </p>
@@ -34,25 +44,23 @@
           Unknown Error
         </p>
 
-        <b-col v-else-if="title !== '' && errorResponse === 200">
-          <h3>The title of this url is:</h3>
+        <b-col v-else-if="errorResponse === 200">
+          <h3>The title of this website is:</h3>
           <p style="font-size: xx-large">
             <em>{{ title }}</em>
           </p>
         </b-col>
-      </b-row>
-    </b-card>
+      </b-card>
+    </b-col>
 
-    <b-container
+    <!-- Display Search History if Exists -->
+    <b-card
+      title="History"
       style="text-align: start; border: 1px solid #cecece"
       v-if="history.length !== 0"
-      class="mt-5 px-3 py-3"
     >
-      <h3>
-        <u> History </u>
-      </h3>
       <b-table per-page="10" thead-class="d-none" :items="history"> </b-table>
-    </b-container>
+    </b-card>
   </b-container>
 </template>
 
@@ -63,9 +71,7 @@ export default {
   name: "TitleBot",
   data() {
     return {
-      form: {
-        url: "",
-      },
+      url: "",
       title: "",
       errorResponse: 200,
       isLoading: false,
@@ -81,10 +87,12 @@ export default {
       event.preventDefault();
 
       axios
-        .get(`http://localhost:3000/?url=http://${this.form.url}`)
+        .get("http://localhost:3000/", {
+          params: { url: `http://${this.url}` },
+        })
         .then((response) => {
           this.title = response.data;
-          this.history.unshift({ url: this.form.url, title: response.data });
+          this.history.unshift({ url: this.url, title: response.data });
           this.isLoading = false;
         })
         .catch((e) => {
@@ -97,7 +105,4 @@ export default {
 </script>
 
 <style>
-.card-title {
-  font-size: 48px;
-}
 </style>
